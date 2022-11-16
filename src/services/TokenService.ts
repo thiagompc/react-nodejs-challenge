@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 const secret = process.env.JWT_SECRET as string
 
 export class TokenService {
-  generate(email: string) {
-    return jwt.sign({ email }, secret, { expiresIn: "1800" });
+  generate(id: number) {
+    return jwt.sign({ id }, secret, { expiresIn: "2 days" });
   }
 
   validate(req: any, res: Response, next: NextFunction) {
@@ -17,6 +17,7 @@ export class TokenService {
 
     jwt.verify(token, secret, (error: any, user: any) => {
       if(error) {
+        console.log(error)
         return res.status(403).json({message: "Falha na autenticação"});
       }
       req.user = user;

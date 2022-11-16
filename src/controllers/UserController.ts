@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { User } from "../entities/User";
-import { AuthError } from "../Exceptions";
+import { AuthError, UserException } from "../Exceptions";
 import { UserService } from "../services/UserService";
 
 
 export class UserController {
+
   async register(req: Request, res: Response){
     const { name, email, password } = req.body;
     if(!name) {
@@ -17,46 +17,30 @@ export class UserController {
       return res.status(400).json({ message: "A senha é obrigatória." })
     }
 
-    const userExists = await User.findOne({
-      where: {
-        email: email
-      }
-    });
-
-    if(userExists) {
-      return res.status(400).json({ message: "O e-mail já está cadastrado." })
-    }
-
     try {
       const userService = new UserService();
       const user = await userService.create({ name, email, password });
       return res.status(201).json({ user })
     } catch (error) {
-      console.log(error)
-      return res.status(500).json({ message: "Internal Server Error" })
+      if(error instanceof UserException){
+        return res.status(400).json({ message: error.message });
+      }
+      return res.status(500).json({ message: "Internal Server Error" });
     }
+
   }
 
   async authenticate(req: Request, res: Response){
     const { email, password } = req.body;
     if(!email) {
-      return res.status(400).json({ message: "O email é obrigatório." })
+      return res.status(400).json({ message: "O email é obrigatório." });
     }
     if(!password) {
-      return res.status(400).json({ message: "A senha é obrigatória." })
-    }
-    const user = await User.findOne({
-      where: {
-        email: email
-      }
-    });
-
-    if(!user) {
-      return res.status(401).json({ message: "O usuário não existe." })
+      return res.status(400).json({ message: "A senha é obrigatória." });
     }
     try {
       const userService = new UserService();
-      const authenticatedUser = await userService.validate({ user, password });
+      const authenticatedUser = await userService.validate({email, password });
       return res.status(201).json({ authenticatedUser });
     } catch (error) {
       console.log(error);
@@ -66,4 +50,5 @@ export class UserController {
       return res.status(500).json({ message: "Erro interno do servidor" });
     }
   }
+
 }

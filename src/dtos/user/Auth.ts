@@ -1,6 +1,4 @@
-import { User } from "../../entities/User"
-
 export interface AuthUserDTO {
-  user: User
+  email: string
   password: string
 }
