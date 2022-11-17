@@ -17,5 +17,6 @@ routes.delete('/post/:id', tokenService.validate, postController.delete);
 routes.get('/post', tokenService.validate, postController.list);
 routes.get('/post/:id', tokenService.validate, postController.retrieve);
 routes.put('/post/:id', tokenService.validate, postController.update);
+routes.get('/user/posts/:id', tokenService.validate, postController.listByUser);
 
 export default routes;

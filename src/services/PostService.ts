@@ -64,4 +64,9 @@ export class PostService {
     return post;
   }
 
+  async listByUser(userId: number) {
+    const posts = await this.repository.findAllByUserId(userId);
+    return posts;
+  }
+
 }
