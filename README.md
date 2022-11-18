@@ -40,6 +40,15 @@ Caso aconteça algum erro relacionado ao banco de dados, pode ser que seja neces
 sudo docker-compose up db
 ```
 
+Também é necessário rodar as migrações para que o banco esteja atualizado com as tabelas da aplicação
+```bash
+sudo docker-compose up db
+sudo docker-compose app
+sudo docker-compose exec app bash
+yarn migrations:run
+
+```
+
 ### Frontend
 
 #### Requisitos:
