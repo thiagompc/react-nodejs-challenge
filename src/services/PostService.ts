@@ -20,11 +20,11 @@ export class PostService {
     if(!user) {
       throw new PostException("Usuário não encontrado");
     }
-    await this.repository.create({
+    const post =await this.repository.create({
       content,
       userId
     });
-    return { content, userId };
+    return post;
   }
 
   async delete({ postId, userId }: DeletePostDTO) {
@@ -33,6 +33,7 @@ export class PostService {
       throw new PostException("Post não encontrado.");
     }
     if(post.userId  != userId) {
+      console.log(post.userId, userId);
       throw new PostException("Não é possível deletar posts de outros usuários.");
     }
 

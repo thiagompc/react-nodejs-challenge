@@ -45,6 +45,7 @@ export class UserService {
     }
     const token = this.tokenService.generate(user.id);
     return {
+      id: user.id,
       email: user.email,
       name: user.name,
       accessToken: token
